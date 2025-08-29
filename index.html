@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crestpoint Capital — Where Wealth Reaches New Heights</title>
+
+  <!-- Your main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="logo" role="link" aria-label="Crestpoint Capital - Home">
+      <a href="#hero">
+        <img src="image/cplogo.png" alt="Crestpoint Capital Logo">
+        <span class="company-name">Crestpoint Capital</span>
+      </a>
+    </div>
+
+    <!-- mobile toggle -->
+    <button id="menu-toggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+
+    <ul id="nav-links" class="nav-links" aria-label="Main navigation">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#plans">Plans</a></li>
+      <li><a href="#contact" class="btn">Contact</a></li>
+      <li><a href="signup.html" class="btn-outline">Sign Up</a></li>
+      <li><a href="login.html" class="btn-outline">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header id="hero" class="hero">
+    <video autoplay muted loop playsinline id="hero-video" aria-hidden="true">
+      <source src="image/cpbg.mp4" type="video/mp4">
+    </video>
+
+    <!-- parallax particles container -->
+    <div class="parallax-layer" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <h1>Crestpoint Capital</h1>
+      <p>Where Wealth Reaches New Heights</p>
+      <a href="#plans" class="btn">Apply to Invest</a>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <main>
+    <section id="about" class="reveal">
+      <h2>About Us</h2>
+      <p>
+        Crestpoint Capital LLC is a Delaware-based private investment management company 
+        specializing in cryptocurrency and stock portfolio management. We combine 
+        innovation with discipline to provide secure, strategic, and growth-driven 
+        opportunities for our investors.
+      </p>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="reveal">
+      <h2>Our Services</h2>
+      <ul>
+        <li><strong>Crypto Investment Management:</strong> Secure custody and active management of leading cryptocurrencies.</li>
+        <li><strong>Stock Investment Management:</strong> Diversified portfolios of equities and ETFs.</li>
+        <li><strong>Diversified Portfolio Strategies:</strong> Balanced exposure to both traditional and digital markets.</li>
+      </ul>
+    </section>
+
+    <!-- PLANS -->
+    <section id="plans" class="reveal">
+      <h2>Our Investment Plans</h2>
+
+      <div class="plans-grid">
+        <article class="plan">
+          <h3>Starter Portfolio</h3>
+          <p><strong>Min:</strong> $200 • <strong>Max:</strong> $5,000</p>
+          <p>Balanced entry-level exposure in crypto + selected stocks.</p>
+        </article>
+
+        <article class="plan">
+          <h3>Growth Portfolio</h3>
+          <p><strong>Min:</strong> $5,001 • <strong>Max:</strong> $20,000</p>
+          <p>Aggressive crypto + growth stocks with portfolio rebalancing.</p>
+        </article>
+
+        <article class="plan">
+          <h3>Premium Portfolio</h3>
+          <p><strong>Min:</strong> $20,001 • <strong>Max:</strong> $50,000</p>
+          <p>Blue-chip stocks, top crypto, ETFs + personalized strategy.</p>
+        </article>
+
+        <article class="plan">
+          <h3>Crestpoint Elite Fund</h3>
+          <p><strong>Min:</strong> $50,001 • <strong>Max:</strong> Unlimited</p>
+          <p>Dedicated account manager + exclusive strategies.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- HOW -->
+    <section id="how" class="reveal">
+      <h2>How It Works</h2>
+      <ol>
+        <li><strong>Apply:</strong> Join our private investor network.</li>
+        <li><strong>Managed Growth:</strong> Experts handle the strategy.</li>
+        <li><strong>Track & Withdraw:</strong> Monitor performance and withdraw profits.</li>
+      </ol>
+    </section>
+
+    <!-- WHY -->
+    <section id="why" class="reveal">
+      <h2>Why Choose Crestpoint Capital</h2>
+      <ul>
+        <li>Registered Delaware LLC</li>
+        <li>Balanced crypto + stock strategies</li>
+        <li>Transparency & security</li>
+        <li>Scalable investment plans</li>
+      </ul>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="reveal">
+      <h2>Join Crestpoint Capital Today</h2>
+      <a href="#contact" class="btn">Apply to Invest</a>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="reveal">
+      <h2>Contact Us</h2>
+      <p>Email: info@crestpointcapital.com</p>
+      <p>Location: Wilmington, Delaware, USA</p>
+
+      <form id="contact-form" novalidate>
+        <input name="name" type="text" placeholder="Your Name" required>
+        <input name="email" type="email" placeholder="Your Email" required>
+        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; <span id="year"></span> Crestpoint Capital LLC. All rights reserved.</p>
+    <p><small>Investments involve risk. Crestpoint Capital does not guarantee returns. Private offering only.</small></p>
+  </footer>
+
+  <!-- main script -->
+  <script src="script.js" defer></script>
+</body>
+</html>
