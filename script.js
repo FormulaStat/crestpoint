@@ -130,3 +130,40 @@ if (form) {
 // set year dynamically
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+
+// ROI Counter Animation
+const counters = document.querySelectorAll('.counter');
+const speed = 200; // speed of counter
+
+const animateCounters = () => {
+  counters.forEach(counter => {
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText;
+
+      const increment = target / speed;
+
+      if (count < target) {
+        counter.innerText = (count + increment).toFixed(1);
+        setTimeout(updateCount, 30);
+      } else {
+        counter.innerText = target;
+      }
+    };
+    updateCount();
+  });
+};
+
+// Trigger when section is in view
+const planSection = document.querySelector('.plans');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      observer.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+
+observer.observe(planSection);
