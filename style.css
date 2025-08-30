@@ -628,3 +628,91 @@ footer { padding: 28px 6%; text-align:center; color: #bdbdbd; background:transpa
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+
+/* Navbar Base */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  background: rgba(17, 17, 17, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+/* Hamburger Menu */
+#menu-toggle {
+  display: block;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #fff;
+  z-index: 1001;
+}
+
+/* Mobile Nav */
+#nav-links {
+  position: fixed;
+  top: 60px; /* sits just under navbar */
+  right: -260px; /* start hidden */
+  background: #111;
+  width: 240px;   /* smaller width */
+  height: calc(100vh - 60px);
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  transition: right 0.4s ease-in-out;
+  border-left: 2px solid #222;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4);
+}
+
+#nav-links.active {
+  right: 0; /* slide in */
+}
+
+#nav-links li {
+  margin: 15px 0;
+}
+
+#nav-links li a {
+  font-size: 1rem;
+  padding: 10px;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+#nav-links li a:hover {
+  color: #ffd700;
+}
+
+/* Desktop View */
+@media (min-width: 992px) {
+  #menu-toggle {
+    display: none;
+  }
+
+  #nav-links {
+    position: static;
+    height: auto;
+    width: auto;
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+
+  #nav-links li {
+    margin: 0 20px;
+  }
+
+  #nav-links li a {
+    font-size: 1rem;
+    padding: 0;
+  }
+}
