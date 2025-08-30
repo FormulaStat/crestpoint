@@ -132,38 +132,36 @@ const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 
-// ROI Counter Animation
+// ROI Counter Animation - Fixed
 const counters = document.querySelectorAll('.counter');
-const speed = 200; // speed of counter
+const speed = 150; // smaller = faster
 
-const animateCounters = () => {
-  counters.forEach(counter => {
-    const updateCount = () => {
-      const target = +counter.getAttribute('data-target');
-      const count = +counter.innerText;
+const animateCounter = (counter) => {
+  const target = +counter.getAttribute('data-target');
+  const count = +counter.innerText;
 
-      const increment = target / speed;
+  const increment = target / speed;
 
-      if (count < target) {
-        counter.innerText = (count + increment).toFixed(1);
-        setTimeout(updateCount, 30);
-      } else {
-        counter.innerText = target;
-      }
-    };
-    updateCount();
-  });
+  if (count < target) {
+    counter.innerText = (count + increment).toFixed(1);
+    setTimeout(() => animateCounter(counter), 30);
+  } else {
+    counter.innerText = target;
+  }
 };
 
-// Trigger when section is in view
-const planSection = document.querySelector('.plans');
+// Trigger counters when visible
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      animateCounters();
-      observer.disconnect();
+      const planCounters = entry.target.querySelectorAll('.counter');
+      planCounters.forEach(counter => animateCounter(counter));
+      observer.unobserve(entry.target); // animate each card once
     }
   });
-}, { threshold: 0.5 });
+}, { threshold: 0.4 });
 
-observer.observe(planSection);
+// Observe each plan card individually
+document.querySelectorAll('.plan').forEach(plan => {
+  observer.observe(plan);
+});
