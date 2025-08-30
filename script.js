@@ -6,7 +6,7 @@
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-// --- MOBILE NAVBAR TOGGLE ---
+// --- MOBILE NAV TOGGLE ---
 const menuToggle = $('#menu-toggle');
 const navLinksContainer = $('#nav-links');
 
@@ -16,7 +16,7 @@ if (menuToggle && navLinksContainer) {
     menuToggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
   });
 
-  // Close menu when clicking any link
+  // close menu on link click
   $$('#nav-links a').forEach(a => {
     a.addEventListener('click', () => {
       if (navLinksContainer.classList.contains('active')) {
@@ -27,11 +27,11 @@ if (menuToggle && navLinksContainer) {
   });
 }
 
-// --- PARALLAX PARTICLES ---
-const parallaxLayer = $('.parallax-layer');
+// --- PARTICLES GENERATOR ---
+const parallaxLayer = document.querySelector('.parallax-layer');
 function createParticles(count = 24) {
   if (!parallaxLayer) return;
-  parallaxLayer.innerHTML = '';
+  parallaxLayer.innerHTML = ''; // reset
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
@@ -46,13 +46,13 @@ function createParticles(count = 24) {
 }
 createParticles();
 
-// Parallax movement
+// --- PARTICLES PARALLAX ---
 (function particlesParallax() {
   const particles = () => parallaxLayer ? Array.from(parallaxLayer.children) : [];
   window.addEventListener('mousemove', (e) => {
     const w = window.innerWidth, h = window.innerHeight;
-    const cx = (e.clientX - w/2) / (w/2);
-    const cy = (e.clientY - h/2) / (h/2);
+    const cx = (e.clientX - w / 2) / (w / 2);
+    const cy = (e.clientY - h / 2) / (h / 2);
     particles().forEach((p, i) => {
       const speed = parseFloat(p.dataset.speed || 0.5);
       const tx = Math.round(cx * (6 * speed) * (i % 3 + 1));
@@ -60,22 +60,21 @@ createParticles();
       p.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
     });
   });
-
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-    particles().forEach((p, i) => {
+    particles().forEach((p) => {
       const speed = parseFloat(p.dataset.speed || 0.5);
-      p.style.transform = `translate3d(0, ${- (scrollY * speed * 0.03)}px, 0)`;
+      p.style.transform = `translate3d(0, ${-(scrollY * speed * 0.03)}px, 0)`;
     });
   });
 })();
 
-// --- NAVBAR SCROLL EFFECT ---
+// --- NAVBAR SCROLLED EFFECT ---
 const navbar = $('#navbar');
 const hero = $('#hero');
 window.addEventListener('scroll', () => {
   if (!navbar) return;
-  if (window.scrollY > (hero ? (hero.offsetHeight * 0.4) : 60)) {
+  if (window.scrollY > (hero ? hero.offsetHeight * 0.4 : 60)) {
     navbar.classList.add('scrolled');
   } else {
     navbar.classList.remove('scrolled');
@@ -90,122 +89,89 @@ const ioOptions = { threshold: 0.18 };
 const io = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     const id = entry.target.getAttribute('id');
-    // Reveal animation
+    // reveal animation
     if (entry.isIntersecting) entry.target.classList.add('visible');
-    // ScrollSpy highlight
+    // scrollspy highlight
     if (entry.isIntersecting && id) {
-      navLinks.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-      });
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
     }
   });
 }, ioOptions);
-
 sections.forEach(s => io.observe(s));
 
-// --- ROI & METRICS COUNTERS ---
+// --- ROI / METRICS COUNTERS ---
 const counters = document.querySelectorAll('.counter');
-const speed = 150; // lower = faster
-
 const animateCounter = (counter) => {
-  const target = +counter.dataset.target;
+  const target = +counter.getAttribute('data-target');
   let count = +counter.innerText;
-  const increment = target / speed;
-
+  const increment = target / 150; // speed
   if (count < target) {
-    count += increment;
-    if (target < 10) counter.innerText = count.toFixed(1);
-    else counter.innerText = Math.ceil(count);
-    requestAnimationFrame(() => animateCounter(counter));
+    counter.innerText = (count + increment).toFixed(1);
+    setTimeout(() => animateCounter(counter), 25);
   } else {
     counter.innerText = target;
   }
 };
 
-// Animate when visible
+// animate when visible
 const counterObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.querySelectorAll('.counter').forEach(c => animateCounter(c));
+      const planCounters = entry.target.querySelectorAll('.counter');
+      planCounters.forEach(c => animateCounter(c));
       counterObserver.unobserve(entry.target);
     }
   });
 }, { threshold: 0.4 });
-
 document.querySelectorAll('.plan, .metric').forEach(el => counterObserver.observe(el));
 
 // --- TESTIMONIAL SLIDER ---
-const testimonials = $$('.testimonial');
+const slides = $$('.testimonial');
 const dotsContainer = $('.testimonial-dots');
-let currentTestimonial = 0;
-let testimonialInterval;
+let currentSlide = 0;
 
-// Create dots
-testimonials.forEach((_, i) => {
-  const dot = document.createElement('span');
-  dot.classList.add(i === 0 ? 'active' : '');
-  dot.dataset.index = i;
-  dot.addEventListener('click', () => {
-    showTestimonial(i);
-    resetTestimonialInterval();
-  });
-  dotsContainer.appendChild(dot);
-});
-
-function showTestimonial(index) {
-  testimonials.forEach((t, i) => {
-    t.classList.toggle('active', i === index);
-  });
-  dotsContainer.querySelectorAll('span').forEach((d, i) => {
-    d.classList.toggle('active', i === index);
-  });
-  currentTestimonial = index;
+function showSlide(index) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === index));
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.classList.toggle('active', i === index);
+      dot.addEventListener('click', () => showSlide(i));
+      dotsContainer.appendChild(dot);
+    });
+  }
 }
+showSlide(currentSlide);
+setInterval(() => {
+  currentSlide = (currentSlide + 1) % slides.length;
+  showSlide(currentSlide);
+}, 7000);
 
-function nextTestimonial() {
-  currentTestimonial = (currentTestimonial + 1) % testimonials.length;
-  showTestimonial(currentTestimonial);
-}
-
-function resetTestimonialInterval() {
-  clearInterval(testimonialInterval);
-  testimonialInterval = setInterval(nextTestimonial, 7000);
-}
-
-testimonialInterval = setInterval(nextTestimonial, 7000);
-
-// Pause on hover
-const slider = $('.testimonial-slider');
-if (slider) {
-  slider.addEventListener('mouseenter', () => clearInterval(testimonialInterval));
-  slider.addEventListener('mouseleave', () => testimonialInterval = setInterval(nextTestimonial, 7000));
-}
-
-// --- CONTACT FORM ---
+// --- CONTACT FORM TOAST ---
 const form = $('#contact-form');
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const name = form.name?.value.trim();
-    const email = form.email?.value.trim();
-    const message = form.message?.value.trim();
-    if (!name || !email || !message) {
-      showToast('Please fill all fields.', 'error');
-      return;
-    }
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const msg = form.message.value.trim();
+    if (!name || !email || !msg) return showToast('Please fill all fields', 'error');
     form.reset();
     showToast('Message sent successfully!', 'success');
   });
 }
 
-// Toast function
-function showToast(msg, type = 'success') {
-  let toast = document.createElement('div');
-  toast.className = `toast ${type} show`;
-  toast.textContent = msg;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.classList.remove('show'), 3000);
-  setTimeout(() => toast.remove(), 3500);
+function showToast(message, type = 'success') {
+  let toast = $('.toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
 }
 
 // --- DYNAMIC YEAR ---
