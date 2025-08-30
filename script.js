@@ -2,11 +2,11 @@
    script.js
    =========== */
 
-// --- helpers ---
+/* ---------- helpers ---------- */
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-// --- mobile nav toggle ---
+/* ---------- mobile nav toggle ---------- */
 const menuToggle = $('#menu-toggle');
 const navLinksContainer = $('#nav-links');
 
@@ -27,7 +27,7 @@ if (menuToggle && navLinksContainer) {
   });
 }
 
-// --- particles generator ---
+/* ---------- particles generator (unchanged) ---------- */
 const parallaxLayer = document.querySelector('.parallax-layer');
 function createParticles(count = 22) {
   if (!parallaxLayer) return;
@@ -35,7 +35,6 @@ function createParticles(count = 22) {
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
-    // randomized size + position
     const size = 3 + Math.round(Math.random() * 6);
     p.style.width = `${size}px`;
     p.style.height = `${size}px`;
@@ -47,9 +46,10 @@ function createParticles(count = 22) {
 }
 createParticles(24);
 
-// particles subtle parallax on mousemove & scroll
+/* subtle parallax on mousemove & scroll */
 (function particlesParallax() {
-  const particles = () => parallaxLayer ? Array.from(parallaxLayer.children) : [];
+  if (!parallaxLayer) return;
+  const particles = () => Array.from(parallaxLayer.children);
   window.addEventListener('mousemove', (e) => {
     const w = window.innerWidth, h = window.innerHeight;
     const cx = (e.clientX - w/2) / (w/2);
@@ -62,7 +62,6 @@ createParticles(24);
     });
   });
 
-  // slight vertical soft motion on scroll
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     particles().forEach((p, i) => {
@@ -72,7 +71,7 @@ createParticles(24);
   });
 })();
 
-// --- navbar scrolled effect ---
+/* ---------- navbar scrolled effect ---------- */
 const navbar = document.getElementById('navbar');
 const hero = document.getElementById('hero');
 window.addEventListener('scroll', () => {
@@ -84,7 +83,7 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// --- ScrollSpy & reveal-on-scroll using IntersectionObserver ---
+/* ---------- main IntersectionObserver: reveal + scrollspy ---------- */
 const sections = $$('main section, header#hero');
 const navLinks = $$('#nav-links a');
 
@@ -92,11 +91,13 @@ const ioOptions = { threshold: 0.18 };
 const io = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     const id = entry.target.getAttribute('id');
-    // reveal
+
+    // reveal animation
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
     }
-    // scrollspy - highlight nav link for the visible section
+
+    // scrollspy - set active nav link for the visible section
     if (entry.isIntersecting && id) {
       navLinks.forEach(a => {
         a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
@@ -105,15 +106,69 @@ const io = new IntersectionObserver((entries) => {
   });
 }, ioOptions);
 
-// observe all sections
 sections.forEach(s => io.observe(s));
 
-// --- contact form (simple UX) ---
+/* ---------- ROI Counter Animation (fixed & robust) ---------- */
+/*
+  - Each .plan is observed individually.
+  - Each .counter has data-target (number). Example: data-target="1.8" or data-target="10"
+  - The animation stores an internal data-current so rounding doesn't block progress.
+*/
+function animateCounterElement(counter) {
+  const target = parseFloat(counter.dataset.target);
+  if (isNaN(target)) return;
+
+  // determine decimals to show: if target has fractional part show 1 decimal, else 0
+  const decimals = (target % 1 !== 0) ? 1 : 0;
+
+  let current = parseFloat(counter.dataset.current) || 0;
+  // base increment calculated from target, and ensure a minimum increment for tiny targets
+  const baseIncrement = Math.max(target / 110, 0.01); // tweak denominator for speed
+  current += baseIncrement;
+
+  // store new current
+  counter.dataset.current = current;
+
+  // display (rounded according to decimals)
+  counter.innerText = decimals ? current.toFixed(decimals) : Math.round(current).toString();
+
+  if (current < target) {
+    // continue on next animation frame for smoothness
+    requestAnimationFrame(() => animateCounterElement(counter));
+  } else {
+    // finish exactly at target
+    counter.innerText = decimals ? target.toFixed(decimals) : String(Math.round(target));
+    counter.dataset.current = target;
+    counter.dataset.animated = 'true';
+  }
+}
+
+/* Observe each .plan and animate counters inside when the card enters view */
+const planObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const counters = entry.target.querySelectorAll('.counter');
+      counters.forEach(counter => {
+        if (!counter.dataset.animated) {
+          // ensure starting text is 0
+          counter.innerText = '0';
+          counter.dataset.current = 0;
+          animateCounterElement(counter);
+        }
+      });
+      planObserver.unobserve(entry.target); // animate only once per plan
+    }
+  });
+}, { threshold: 0.45 });
+
+// attach observer to each plan card
+$$('.plan').forEach(plan => planObserver.observe(plan));
+
+/* ---------- contact form simple UX ---------- */
 const form = document.getElementById('contact-form');
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    // Basic client-side validation
     const name = form.name?.value?.trim();
     const email = form.email?.value?.trim();
     const msg = form.message?.value?.trim();
@@ -121,47 +176,11 @@ if (form) {
       alert('Please fill all fields before sending.');
       return;
     }
-    // Fake success for demo (replace with real submit)
     alert('Thanks — your message was sent. We will contact you shortly.');
     form.reset();
   });
 }
 
-// set year dynamically
+/* ---------- set current year ---------- */
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-
-// ROI Counter Animation - Fixed
-const counters = document.querySelectorAll('.counter');
-const speed = 150; // smaller = faster
-
-const animateCounter = (counter) => {
-  const target = +counter.getAttribute('data-target');
-  const count = +counter.innerText;
-
-  const increment = target / speed;
-
-  if (count < target) {
-    counter.innerText = (count + increment).toFixed(1);
-    setTimeout(() => animateCounter(counter), 30);
-  } else {
-    counter.innerText = target;
-  }
-};
-
-// Trigger counters when visible
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const planCounters = entry.target.querySelectorAll('.counter');
-      planCounters.forEach(counter => animateCounter(counter));
-      observer.unobserve(entry.target); // animate each card once
-    }
-  });
-}, { threshold: 0.4 });
-
-// Observe each plan card individually
-document.querySelectorAll('.plan').forEach(plan => {
-  observer.observe(plan);
-});
