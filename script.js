@@ -264,3 +264,97 @@ if (contactForm) {
 /* ------- Set copyright year ------- */
 const yearEl = $('#year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+
+/* ===========
+   script.js
+   =========== */
+
+// helpers
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+// Mobile nav toggle
+const menuToggle = $('#menu-toggle');
+const navLinksContainer = $('#nav-links');
+
+if (menuToggle && navLinksContainer) {
+  menuToggle.addEventListener('click', () => {
+    navLinksContainer.classList.toggle('active');
+    menuToggle.setAttribute(
+      'aria-expanded',
+      navLinksContainer.classList.contains('active') ? 'true' : 'false'
+    );
+  });
+
+  // Close on link click
+  $$('#nav-links a').forEach(a =>
+    a.addEventListener('click', () => {
+      navLinksContainer.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    })
+  );
+}
+
+// Navbar scroll effect
+const navbar = $('#navbar');
+const hero = $('#hero');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > (hero ? hero.offsetHeight * 0.3 : 80)) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
+
+// ScrollSpy
+const sections = $$('main section, header#hero');
+const navLinks = $$('#nav-links a');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+      });
+    }
+  });
+}, { threshold: 0.25 });
+sections.forEach(s => io.observe(s));
+
+// ROI Counter Animation
+const counters = document.querySelectorAll('.counter');
+const speed = 150;
+
+function animateCounter(counter) {
+  const target = +counter.getAttribute('data-target');
+  let count = +counter.innerText;
+  const increment = target / speed;
+
+  function update() {
+    if (count < target) {
+      count += increment;
+      counter.innerText = Math.ceil(count);
+      requestAnimationFrame(update);
+    } else {
+      counter.innerText = target;
+    }
+  }
+  update();
+}
+
+// Observe ROI cards
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.counter').forEach(animateCounter);
+      counterObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.plan').forEach(plan => counterObserver.observe(plan));
+
+// Dynamic year
+const yearEl = $('#year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
