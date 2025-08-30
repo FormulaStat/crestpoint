@@ -177,3 +177,36 @@ function showToast(message, type = 'success') {
 // --- DYNAMIC YEAR ---
 const yearEl = $('#year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+// ROI Counter Animation
+const counters = document.querySelectorAll('.counter');
+const speed = 150; // smaller = faster
+
+const animateCounter = (counter) => {
+  const target = +counter.getAttribute('data-target');
+  const count = +counter.innerText;
+
+  const increment = target / speed;
+
+  if (count < target) {
+    counter.innerText = (count + increment).toFixed(1);
+    setTimeout(() => animateCounter(counter), 30);
+  } else {
+    counter.innerText = target;
+  }
+};
+
+// Trigger counters when plans section or metrics section is visible
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // animate all counters inside this section
+      entry.target.querySelectorAll('.counter').forEach(counter => animateCounter(counter));
+      counterObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.4 });
+
+// Observe the plans section and metrics section
+const sectionsWithCounters = document.querySelectorAll('.plans, .metrics');
+sectionsWithCounters.forEach(section => counterObserver.observe(section));
