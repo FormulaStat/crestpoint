@@ -243,3 +243,43 @@ function drawSparkline(canvasId, data, color="#00d084") {
 drawSparkline('spark1', [3, 5, 6, 4, 7, 8, 10, 9, 12]);
 drawSparkline('spark2', [100, 200, 300, 500, 700, 850]);
 drawSparkline('spark3', [10, 12, 13, 15, 14, 14.5]);
+
+
+/* ---------- Metrics Counters ---------- */
+function animateCounter(counterElement) {
+  const target = parseFloat(counterElement.getAttribute('data-target'));
+  const duration = 2500; // 2.5s animation
+  const stepTime = 20;   // update every 20ms
+  let current = 0;
+
+  const increment = target / (duration / stepTime);
+
+  const updateCounter = () => {
+    current += increment;
+    if (current < target) {
+      counterElement.innerText = target % 1 === 0 ? Math.floor(current) : current.toFixed(1);
+      requestAnimationFrame(updateCounter);
+    } else {
+      counterElement.innerText = target; // final number
+    }
+  };
+
+  updateCounter();
+}
+
+// Run counters when metrics section is visible
+const metricCounters = document.querySelectorAll('.metrics .counter');
+const metricsSection = document.getElementById('metrics');
+
+if (metricsSection) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        metricCounters.forEach(counter => animateCounter(counter));
+        observer.disconnect(); // run once
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(metricsSection);
+}
