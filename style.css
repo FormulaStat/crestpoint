@@ -157,50 +157,77 @@ footer { padding: 28px 6%; text-align:center; color: #bdbdbd; background:transpa
   .nav-links li a { font-size: 1.05rem; }
 }
 
-/* Investment Plan Styles */
+/* Investment Plan Section */
 .plans {
-  padding: 80px 5%;
+  padding: 100px 8%;
   background: #0b0f17;
   text-align: center;
 }
 
 .section-title {
-  font-size: 2rem;
-  margin-bottom: 40px;
+  font-size: 2.2rem;
+  margin-bottom: 60px;
   color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .plan-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 35px;
 }
 
+/* Plan Card */
 .plan {
-  background: #141a25;
-  padding: 25px;
-  border-radius: 16px;
+  background: linear-gradient(165deg, #141a25, #0e121b);
+  padding: 35px 25px;
+  border-radius: 20px;
   transition: all 0.4s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255, 215, 0, 0.15);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
 .plan:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(255, 215, 0, 0.25);
   border: 1px solid gold;
 }
 
+/* Floating glow effect */
+.plan::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -40%;
+  width: 180%;
+  height: 180%;
+  background: radial-gradient(circle, rgba(255,215,0,0.15), transparent 70%);
+  transform: rotate(25deg);
+  transition: opacity 0.5s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.plan:hover::before {
+  opacity: 1;
+}
+
 .plan h3 {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: gold;
   margin-bottom: 15px;
+  font-weight: 600;
 }
 
 .plan p {
-  color: #ccc;
-  font-size: 0.95rem;
-  margin-bottom: 15px;
+  color: #aaa;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
 }
 
 .plan ul {
@@ -212,28 +239,36 @@ footer { padding: 28px 6%; text-align:center; color: #bdbdbd; background:transpa
 }
 
 .plan ul li {
-  margin: 8px 0;
-  font-size: 0.9rem;
+  margin: 12px 0;
+  font-size: 0.95rem;
+}
+
+.plan ul strong {
+  color: #ffd700;
 }
 
 .plan .btn {
   display: inline-block;
-  margin-top: 15px;
-  padding: 10px 20px;
+  margin-top: 25px;
+  padding: 12px 28px;
   background: gold;
   color: #000;
-  border-radius: 30px;
+  border-radius: 40px;
   font-weight: 600;
-  transition: 0.3s;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
 }
 
 .plan .btn:hover {
   background: #ffcc00;
-  transform: scale(1.05);
+  transform: scale(1.07);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
 }
 
-/* Highlight Elite */
+/* Highlight Elite Plan */
 .plan.elite {
   border: 2px solid gold;
-  background: linear-gradient(145deg, #1a1f2c, #0b0f17);
+  background: linear-gradient(160deg, #1d2232, #0b0f17);
+  transform: scale(1.05);
 }
