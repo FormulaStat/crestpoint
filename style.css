@@ -272,3 +272,115 @@ footer { padding: 28px 6%; text-align:center; color: #bdbdbd; background:transpa
   background: linear-gradient(160deg, #1d2232, #0b0f17);
   transform: scale(1.05);
 }
+
+/* === Testimonials === */
+.testimonials {
+  background: #0d1117;
+  color: #f0f0f0;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.testimonial-slider {
+  position: relative;
+  max-width: 800px;
+  margin: 2rem auto;
+  overflow: hidden;
+}
+
+.testimonial {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.testimonial.active {
+  display: block;
+  opacity: 1;
+}
+
+.testimonial p {
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.testimonial .author {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.testimonial .author img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #00d084;
+}
+
+.testimonial-dots {
+  margin-top: 1rem;
+}
+
+.testimonial-dots span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin: 0 5px;
+  background: #555;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.testimonial-dots span.active {
+  background: #00d084;
+}
+
+/* === Metrics === */
+.metrics {
+  background: #111827;
+  color: #fff;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.metric {
+  background: #1f2937;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.metric .counter {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #00d084;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.metric .label {
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.metric .sparkline {
+  width: 100%;
+  height: 60px;
+  margin-top: 1rem;
+}
