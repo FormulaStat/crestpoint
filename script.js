@@ -6,7 +6,7 @@
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-// --- MOBILE NAV TOGGLE ---
+// --- mobile nav toggle ---
 const menuToggle = $('#menu-toggle');
 const navLinksContainer = $('#nav-links');
 
@@ -16,7 +16,7 @@ if (menuToggle && navLinksContainer) {
     menuToggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
   });
 
-  // close menu on link click
+  // close when clicking any internal link (good UX)
   $$('#nav-links a').forEach(a => {
     a.addEventListener('click', () => {
       if (navLinksContainer.classList.contains('active')) {
@@ -27,9 +27,9 @@ if (menuToggle && navLinksContainer) {
   });
 }
 
-// --- PARTICLES GENERATOR ---
+// --- particles generator ---
 const parallaxLayer = document.querySelector('.parallax-layer');
-function createParticles(count = 24) {
+function createParticles(count = 22) {
   if (!parallaxLayer) return;
   parallaxLayer.innerHTML = ''; // reset
   for (let i = 0; i < count; i++) {
@@ -44,15 +44,15 @@ function createParticles(count = 24) {
     parallaxLayer.appendChild(p);
   }
 }
-createParticles();
+createParticles(24);
 
-// --- PARTICLES PARALLAX ---
+// particles subtle parallax on mousemove & scroll
 (function particlesParallax() {
   const particles = () => parallaxLayer ? Array.from(parallaxLayer.children) : [];
   window.addEventListener('mousemove', (e) => {
     const w = window.innerWidth, h = window.innerHeight;
-    const cx = (e.clientX - w / 2) / (w / 2);
-    const cy = (e.clientY - h / 2) / (h / 2);
+    const cx = (e.clientX - w/2) / (w/2);
+    const cy = (e.clientY - h/2) / (h/2);
     particles().forEach((p, i) => {
       const speed = parseFloat(p.dataset.speed || 0.5);
       const tx = Math.round(cx * (6 * speed) * (i % 3 + 1));
@@ -60,28 +60,29 @@ createParticles();
       p.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
     });
   });
+
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-    particles().forEach((p) => {
+    particles().forEach((p, i) => {
       const speed = parseFloat(p.dataset.speed || 0.5);
       p.style.transform = `translate3d(0, ${-(scrollY * speed * 0.03)}px, 0)`;
     });
   });
 })();
 
-// --- NAVBAR SCROLLED EFFECT ---
+// --- navbar scrolled effect ---
 const navbar = $('#navbar');
 const hero = $('#hero');
 window.addEventListener('scroll', () => {
   if (!navbar) return;
-  if (window.scrollY > (hero ? hero.offsetHeight * 0.4 : 60)) {
+  if (window.scrollY > (hero ? (hero.offsetHeight * 0.4) : 60)) {
     navbar.classList.add('scrolled');
   } else {
     navbar.classList.remove('scrolled');
   }
 });
 
-// --- SCROLLSPY & REVEAL ---
+// --- ScrollSpy & reveal-on-scroll ---
 const sections = $$('main section, header#hero');
 const navLinks = $$('#nav-links a');
 
@@ -89,103 +90,46 @@ const ioOptions = { threshold: 0.18 };
 const io = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     const id = entry.target.getAttribute('id');
-    // reveal animation
+    // reveal
     if (entry.isIntersecting) entry.target.classList.add('visible');
-    // scrollspy highlight
+    // scrollspy
     if (entry.isIntersecting && id) {
-      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+      });
     }
   });
 }, ioOptions);
+
 sections.forEach(s => io.observe(s));
 
-// --- ROI / METRICS COUNTERS ---
-const counters = document.querySelectorAll('.counter');
-const animateCounter = (counter) => {
-  const target = +counter.getAttribute('data-target');
-  let count = +counter.innerText;
-  const increment = target / 150; // speed
-  if (count < target) {
-    counter.innerText = (count + increment).toFixed(1);
-    setTimeout(() => animateCounter(counter), 25);
-  } else {
-    counter.innerText = target;
-  }
-};
-
-// animate when visible
-const counterObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const planCounters = entry.target.querySelectorAll('.counter');
-      planCounters.forEach(c => animateCounter(c));
-      counterObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.4 });
-document.querySelectorAll('.plan, .metric').forEach(el => counterObserver.observe(el));
-
-// --- TESTIMONIAL SLIDER ---
-const slides = $$('.testimonial');
-const dotsContainer = $('.testimonial-dots');
-let currentSlide = 0;
-
-function showSlide(index) {
-  slides.forEach((s, i) => s.classList.toggle('active', i === index));
-  if (dotsContainer) {
-    dotsContainer.innerHTML = '';
-    slides.forEach((_, i) => {
-      const dot = document.createElement('span');
-      dot.classList.toggle('active', i === index);
-      dot.addEventListener('click', () => showSlide(i));
-      dotsContainer.appendChild(dot);
-    });
-  }
-}
-showSlide(currentSlide);
-setInterval(() => {
-  currentSlide = (currentSlide + 1) % slides.length;
-  showSlide(currentSlide);
-}, 7000);
-
-// --- CONTACT FORM TOAST ---
+// --- contact form ---
 const form = $('#contact-form');
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const msg = form.message.value.trim();
-    if (!name || !email || !msg) return showToast('Please fill all fields', 'error');
+    const name = form.name?.value?.trim();
+    const email = form.email?.value?.trim();
+    const msg = form.message?.value?.trim();
+    if (!name || !email || !msg) {
+      alert('Please fill all fields before sending.');
+      return;
+    }
+    alert('Thanks — your message was sent. We will contact you shortly.');
     form.reset();
-    showToast('Message sent successfully!', 'success');
   });
 }
 
-function showToast(message, type = 'success') {
-  let toast = $('.toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    document.body.appendChild(toast);
-  }
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
-}
-
-// --- DYNAMIC YEAR ---
+// --- dynamic year ---
 const yearEl = $('#year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-// ROI Counter Animation
-const counters = document.querySelectorAll('.counter');
-const speed = 150; // smaller = faster
+// --- ROI / Metrics Counters ---
+const speed = 150;
 
 const animateCounter = (counter) => {
   const target = +counter.getAttribute('data-target');
-  const count = +counter.innerText;
-
+  let count = +counter.innerText || 0;
   const increment = target / speed;
 
   if (count < target) {
@@ -196,17 +140,46 @@ const animateCounter = (counter) => {
   }
 };
 
-// Trigger counters when plans section or metrics section is visible
+// Animate counters when their section is visible
 const counterObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      // animate all counters inside this section
       entry.target.querySelectorAll('.counter').forEach(counter => animateCounter(counter));
       counterObserver.unobserve(entry.target);
     }
   });
 }, { threshold: 0.4 });
 
-// Observe the plans section and metrics section
-const sectionsWithCounters = document.querySelectorAll('.plans, .metrics');
+// Observe plans and metrics
+const sectionsWithCounters = $$('.plans, .metrics');
 sectionsWithCounters.forEach(section => counterObserver.observe(section));
+
+// --- Testimonials Slider ---
+const testimonials = $$('.testimonial');
+const dotsContainer = $('.testimonial-dots');
+
+let currentTestimonial = 0;
+
+// Create dots dynamically
+if (dotsContainer) {
+  testimonials.forEach((_, i) => {
+    const dot = document.createElement('span');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => showTestimonial(i));
+    dotsContainer.appendChild(dot);
+  });
+}
+
+const dots = $$('.testimonial-dots span');
+
+function showTestimonial(index) {
+  testimonials.forEach((t, i) => t.classList.toggle('active', i === index));
+  dots.forEach((d, i) => d.classList.toggle('active', i === index));
+  currentTestimonial = index;
+}
+
+// Auto-slide every 6 seconds
+setInterval(() => {
+  let next = (currentTestimonial + 1) % testimonials.length;
+  showTestimonial(next);
+}, 6000);
