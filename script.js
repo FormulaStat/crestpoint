@@ -184,3 +184,62 @@ if (form) {
 /* ---------- set current year ---------- */
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+/* ---------- Testimonial Slider ---------- */
+const testimonials = document.querySelectorAll('.testimonial');
+const dotsContainer = document.querySelector('.testimonial-dots');
+let currentTestimonial = 0;
+
+// create dots
+if (dotsContainer && testimonials.length > 0) {
+  testimonials.forEach((_, i) => {
+    const dot = document.createElement('span');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => showTestimonial(i));
+    dotsContainer.appendChild(dot);
+  });
+}
+
+function showTestimonial(index) {
+  testimonials[currentTestimonial].classList.remove('active');
+  dotsContainer.children[currentTestimonial].classList.remove('active');
+  currentTestimonial = index;
+  testimonials[currentTestimonial].classList.add('active');
+  dotsContainer.children[currentTestimonial].classList.add('active');
+}
+
+function nextTestimonial() {
+  let nextIndex = (currentTestimonial + 1) % testimonials.length;
+  showTestimonial(nextIndex);
+}
+
+// autoplay every 6s
+setInterval(nextTestimonial, 6000);
+
+
+/* ---------- Metrics Sparklines ---------- */
+function drawSparkline(canvasId, data, color="#00d084") {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.offsetWidth;
+  const h = canvas.height = canvas.offsetHeight;
+  
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+
+  data.forEach((val, i) => {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - (val / Math.max(...data)) * h;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+}
+
+// sample sparkline data
+drawSparkline('spark1', [3, 5, 6, 4, 7, 8, 10, 9, 12]);
+drawSparkline('spark2', [100, 200, 300, 500, 700, 850]);
+drawSparkline('spark3', [10, 12, 13, 15, 14, 14.5]);
