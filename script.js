@@ -1,138 +1,126 @@
 /* ===========
-   script.js - Clean & Functional Build
-   ========== */
+   SCRIPT.JS – CLEAN & FIXED
+   =========== */
 
-// Helpers
-const $ = sel => document.querySelector(sel);
-const $$ = sel => document.querySelectorAll(sel);
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
 
-// Mobile Nav Toggle
+// MOBILE NAV TOGGLE + OVERLAY
 const toggle = $('#menu-toggle');
-const navLinks = $('#nav-links');
+const nav = $('#nav-links');
 const overlay = document.createElement('div');
 overlay.id = 'nav-overlay';
 document.body.appendChild(overlay);
 
 toggle?.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
+  nav.classList.toggle('active');
   overlay.classList.toggle('active');
 });
 
-overlay?.addEventListener('click', () => {
-  navLinks.classList.remove('active');
+overlay.addEventListener('click', () => {
+  nav.classList.remove('active');
   overlay.classList.remove('active');
 });
 
-// Navbar Scroll Styling
-const navbar = $('#navbar');
+// SCROLL STYLING ON NAV
+const navBar = $('#navbar');
 const hero = $('#hero');
-
 window.addEventListener('scroll', () => {
-  if (!navbar) return;
-  if (window.scrollY > (hero?.offsetHeight * 0.4 || 60)) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
+  if (!navBar) return;
+  const threshold = hero ? hero.offsetHeight * 0.4 : 60;
+  navBar.classList.toggle('scrolled', window.scrollY > threshold);
 });
 
-// Scroll Reveal + ScrollSpy
+// SCROLL REVEAL + SCROLLSPY
 const sections = $$('main section, header#hero');
 const links = $$('#nav-links a');
-
-const sectionObserver = new IntersectionObserver(entries => {
+const io = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    const id = e.target.id;
+    const targetId = e.target.id;
     if (e.isIntersecting) {
       e.target.classList.add('visible');
-      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${id}`));
+      links.forEach(a => 
+        a.classList.toggle('active', a.getAttribute('href') === `#${targetId}`));
     }
   });
 }, { threshold: 0.3 });
+sections.forEach(s => io.observe(s));
 
-sections.forEach(s => sectionObserver.observe(s));
-
-// Particle Effect
-const pl = $('.parallax-layer');
-if (pl) {
-  const count = 25;
-  pl.innerHTML = '';
-  for (let i = 0; i < count; i++) {
+// PARTICLE GENERATION + PARALLAX EFFECT
+const layer = $('.parallax-layer');
+if (layer) {
+  layer.innerHTML = '';
+  for (let i = 0; i < 25; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
-    const size = Math.random() * 8 + 3;
-    p.style.width = p.style.height = `${size}px`;
-    p.style.top = `${Math.random() * 100}%`;
-    p.style.left = `${Math.random() * 100}%`;
-    p.dataset.speed = (0.2 + Math.random() * 0.8).toFixed(2);
-    pl.appendChild(p);
+    const sz = Math.random() * 7 + 3;
+    p.style.width = p.style.height = `${sz}px`;
+    p.style.top = `${Math.random()*100}%`;
+    p.style.left = `${Math.random()*100}%`;
+    p.dataset.speed = (0.2 + Math.random()*0.8).toFixed(2);
+    layer.append(p);
   }
 
   window.addEventListener('mousemove', e => {
-    const w = window.innerWidth, h = window.innerHeight;
-    const cx = (e.clientX - w / 2) / (w / 2);
-    const cy = (e.clientY - h / 2) / (h / 2);
-    pl.querySelectorAll('.particle').forEach((pt, i) => {
+    const cx = (e.clientX - window.innerWidth/2) / (window.innerWidth/2);
+    const cy = (e.clientY - window.innerHeight/2) / (window.innerHeight/2);
+    layer.querySelectorAll('.particle').forEach((pt, idx) => {
       const speed = parseFloat(pt.dataset.speed);
-      const tx = cx * 10 * speed;
-      const ty = cy * 10 * speed;
-      pt.style.transform = `translate(${tx}px, ${ty}px)`;
+      pt.style.transform = `translate(${cx * 12 * speed}px, ${cy * 12 * speed}px)`;
     });
   });
 
   window.addEventListener('scroll', () => {
     const sy = window.scrollY;
-    pl.querySelectorAll('.particle').forEach(pt => {
-      const speed = parseFloat(pt.dataset.speed);
-      pt.style.transform = `translate(0, ${-sy * speed * 0.03}px)`;
+    layer.querySelectorAll('.particle').forEach(pt => {
+      const sp = parseFloat(pt.dataset.speed);
+      pt.style.transform = `translateY(${ -sy * sp * 0.03 }px)`;
     });
   });
 }
 
-// ROI Counters for Plans
-const animateNumber = (el, target) => {
-  const step = Math.max(1, Math.round(target / 200));
+// SMOOTH COUNTER FUNCTION
+const animateNumber = (el, tgt) => {
   let cur = 0;
+  const step = Math.max(1, Math.round(tgt / 200));
   const tick = () => {
     cur += step;
-    if (cur < target) {
+    if (cur < tgt) {
       el.innerText = cur;
       requestAnimationFrame(tick);
     } else {
-      el.innerText = target;
+      el.innerText = tgt;
     }
   };
   tick();
 };
 
-const planObserver = new IntersectionObserver(entries => {
+// PLAN COUNTERS
+const planObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
       e.target.querySelectorAll('.counter').forEach(cnt => {
-        animateNumber(cnt, parseInt(cnt.dataset.target, 10));
+        animateNumber(cnt, parseFloat(cnt.dataset.target));
       });
-      planObserver.unobserve(e.target);
+      planObs.unobserve(e.target);
     }
   });
 }, { threshold: 0.5 });
+$$('.plan').forEach(p => planObs.observe(p));
 
-$$('.plan').forEach(p => planObserver.observe(p));
-
-// Metrics Counters
-const metObserver = new IntersectionObserver(entries => {
+// METRICS COUNTERS (UNDER “OUR TRACK RECORD”)
+const metObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
       e.target.querySelectorAll('.metrics .counter').forEach(cnt => {
-        const target = parseFloat(cnt.dataset.target);
-        animateNumber(cnt, Math.round(target));
+        animateNumber(cnt, parseFloat(cnt.dataset-target));
       });
-      metObserver.unobserve(e.target);
+      metObs.unobserve(e.target);
     }
   });
 }, { threshold: 0.5 });
+metObs.observe($('.metrics'));
 
-metObserver.observe($('.metrics'));
-
-// Contact year
+// CURRENT YEAR SETTER
 const yearEl = $('#year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
