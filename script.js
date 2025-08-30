@@ -283,3 +283,50 @@ if (metricsSection) {
 
   observer.observe(metricsSection);
 }
+
+
+/* ---------- Contact Form with Toast ---------- */
+const contactForm = document.getElementById("contact-form");
+
+if (contactForm) {
+  contactForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Basic real-time validation
+    const name = contactForm.querySelector("input[name='name']");
+    const email = contactForm.querySelector("input[name='email']");
+    const message = contactForm.querySelector("textarea[name='message']");
+
+    if (!name.value || !email.value || !message.value) {
+      showToast("Please fill all fields", "error");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email.value)) {
+      showToast("Enter a valid email", "error");
+      return;
+    }
+
+    // Simulate successful submission
+    contactForm.reset();
+    showToast("Message sent successfully!", "success");
+  });
+}
+
+/* ---------- Toast Function ---------- */
+function showToast(message, type) {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerText = message;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 100);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
