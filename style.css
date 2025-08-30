@@ -384,3 +384,118 @@ footer { padding: 28px 6%; text-align:center; color: #bdbdbd; background:transpa
   height: 60px;
   margin-top: 1rem;
 }
+
+
+/* CTA Buttons */
+.cta-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #d4af37, #f9e076);
+  color: #111;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* Wave / Spotlight Effect */
+.cta-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255,255,255,0.4);
+  transform: skewX(-25deg);
+  transition: 0.75s;
+}
+
+.cta-btn:hover::before {
+  left: 125%;
+}
+
+
+/* Form Group */
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.form-group label {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  background: #fff;
+  padding: 0 6px;
+  color: #888;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 8px rgba(212,175,55,0.4);
+}
+
+/* Floating Label on Focus/Valid */
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label,
+.form-group textarea:focus + label,
+.form-group textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 10px;
+  font-size: 0.8rem;
+  color: #d4af37;
+}
+
+
+/* Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: -400px;
+  background: #111;
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateX(0);
+  transition: all 0.5s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  right: 30px;
+  opacity: 1;
+}
+
+.toast.success {
+  background: #28a745;
+}
+
+.toast.error {
+  background: #dc3545;
+}
