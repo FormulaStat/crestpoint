@@ -1,170 +1,138 @@
 /* ===========
-   script.js
-   =========== */
+   script.js - Clean & Functional Build
+   ========== */
 
-// --- helpers ---
+// Helpers
 const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
+const $$ = sel => document.querySelectorAll(sel);
 
-// --- mobile nav toggle ---
-const menuToggle = $('#menu-toggle');
-const navLinksContainer = $('#nav-links');
+// Mobile Nav Toggle
+const toggle = $('#menu-toggle');
+const navLinks = $('#nav-links');
+const overlay = document.createElement('div');
+overlay.id = 'nav-overlay';
+document.body.appendChild(overlay);
 
-if (menuToggle && navLinksContainer) {
-  menuToggle.addEventListener('click', () => {
-    const opened = navLinksContainer.classList.toggle('active');
-    menuToggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
-  });
+toggle?.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+  overlay.classList.toggle('active');
+});
 
-  // close when clicking any internal link (good UX)
-  $$('#nav-links a').forEach(a => {
-    a.addEventListener('click', () => {
-      if (navLinksContainer.classList.contains('active')) {
-        navLinksContainer.classList.remove('active');
-        menuToggle.setAttribute('aria-expanded', 'false');
-      }
-    });
-  });
-}
+overlay?.addEventListener('click', () => {
+  navLinks.classList.remove('active');
+  overlay.classList.remove('active');
+});
 
-// --- particles generator ---
-const parallaxLayer = document.querySelector('.parallax-layer');
-function createParticles(count = 22) {
-  if (!parallaxLayer) return;
-  parallaxLayer.innerHTML = ''; // reset
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    // randomized size + position
-    const size = 3 + Math.round(Math.random() * 6);
-    p.style.width = `${size}px`;
-    p.style.height = `${size}px`;
-    p.style.top = `${Math.random() * 100}%`;
-    p.style.left = `${Math.random() * 100}%`;
-    p.dataset.speed = (0.2 + Math.random() * 0.9).toFixed(2);
-    parallaxLayer.appendChild(p);
-  }
-}
-createParticles(24);
+// Navbar Scroll Styling
+const navbar = $('#navbar');
+const hero = $('#hero');
 
-// particles subtle parallax on mousemove & scroll
-(function particlesParallax() {
-  const particles = () => parallaxLayer ? Array.from(parallaxLayer.children) : [];
-  window.addEventListener('mousemove', (e) => {
-    const w = window.innerWidth, h = window.innerHeight;
-    const cx = (e.clientX - w/2) / (w/2);
-    const cy = (e.clientY - h/2) / (h/2);
-    particles().forEach((p, i) => {
-      const speed = parseFloat(p.dataset.speed || 0.5);
-      const tx = Math.round(cx * (6 * speed) * (i % 3 + 1));
-      const ty = Math.round(cy * (8 * speed) * (i % 4 + 1));
-      p.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-    });
-  });
-
-  // slight vertical soft motion on scroll
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    particles().forEach((p, i) => {
-      const speed = parseFloat(p.dataset.speed || 0.5);
-      p.style.transform = `translate3d(0, ${- (scrollY * speed * 0.03)}px, 0)`;
-    });
-  });
-})();
-
-// --- navbar scrolled effect ---
-const navbar = document.getElementById('navbar');
-const hero = document.getElementById('hero');
 window.addEventListener('scroll', () => {
   if (!navbar) return;
-  if (window.scrollY > (hero ? (hero.offsetHeight * 0.4) : 60)) {
+  if (window.scrollY > (hero?.offsetHeight * 0.4 || 60)) {
     navbar.classList.add('scrolled');
   } else {
     navbar.classList.remove('scrolled');
   }
 });
 
-// --- ScrollSpy & reveal-on-scroll using IntersectionObserver ---
+// Scroll Reveal + ScrollSpy
 const sections = $$('main section, header#hero');
-const navLinks = $$('#nav-links a');
+const links = $$('#nav-links a');
 
-const ioOptions = { threshold: 0.18 };
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const id = entry.target.getAttribute('id');
-    // reveal
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-    // scrollspy - highlight nav link for the visible section
-    if (entry.isIntersecting && id) {
-      navLinks.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-      });
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    const id = e.target.id;
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${id}`));
     }
   });
-}, ioOptions);
+}, { threshold: 0.3 });
 
-// observe all sections
-sections.forEach(s => io.observe(s));
+sections.forEach(s => sectionObserver.observe(s));
 
-// --- contact form (simple UX) ---
-const form = document.getElementById('contact-form');
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    // Basic client-side validation
-    const name = form.name?.value?.trim();
-    const email = form.email?.value?.trim();
-    const msg = form.message?.value?.trim();
-    if (!name || !email || !msg) {
-      alert('Please fill all fields before sending.');
-      return;
-    }
-    // Fake success for demo (replace with real submit)
-    alert('Thanks — your message was sent. We will contact you shortly.');
-    form.reset();
+// Particle Effect
+const pl = $('.parallax-layer');
+if (pl) {
+  const count = 25;
+  pl.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 8 + 3;
+    p.style.width = p.style.height = `${size}px`;
+    p.style.top = `${Math.random() * 100}%`;
+    p.style.left = `${Math.random() * 100}%`;
+    p.dataset.speed = (0.2 + Math.random() * 0.8).toFixed(2);
+    pl.appendChild(p);
+  }
+
+  window.addEventListener('mousemove', e => {
+    const w = window.innerWidth, h = window.innerHeight;
+    const cx = (e.clientX - w / 2) / (w / 2);
+    const cy = (e.clientY - h / 2) / (h / 2);
+    pl.querySelectorAll('.particle').forEach((pt, i) => {
+      const speed = parseFloat(pt.dataset.speed);
+      const tx = cx * 10 * speed;
+      const ty = cy * 10 * speed;
+      pt.style.transform = `translate(${tx}px, ${ty}px)`;
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    const sy = window.scrollY;
+    pl.querySelectorAll('.particle').forEach(pt => {
+      const speed = parseFloat(pt.dataset.speed);
+      pt.style.transform = `translate(0, ${-sy * speed * 0.03}px)`;
+    });
   });
 }
 
-// set year dynamically
-const yearEl = document.getElementById('year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-
-// --- ROI Counter Animation (fixed, integer-friendly) ---
-const animateCounter = (counter) => {
-  const target = +counter.getAttribute('data-target');
-  let count = 0; // always start at 0
-
-  const speed = 200; // higher = slower
-  const step = Math.max(1, Math.ceil(target / speed)); // ensure at least 1 per step
-
-  const update = () => {
-    count += step;
-    if (count < target) {
-      counter.innerText = count;
-      requestAnimationFrame(update);
+// ROI Counters for Plans
+const animateNumber = (el, target) => {
+  const step = Math.max(1, Math.round(target / 200));
+  let cur = 0;
+  const tick = () => {
+    cur += step;
+    if (cur < target) {
+      el.innerText = cur;
+      requestAnimationFrame(tick);
     } else {
-      counter.innerText = target; // ensure exact finish
+      el.innerText = target;
     }
   };
-
-  update();
+  tick();
 };
 
-// Trigger counters when visible
-const counterObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const planCounters = entry.target.querySelectorAll('.counter');
-      planCounters.forEach(counter => animateCounter(counter));
-      counterObserver.unobserve(entry.target); // animate each card once
+const planObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.counter').forEach(cnt => {
+        animateNumber(cnt, parseInt(cnt.dataset.target, 10));
+      });
+      planObserver.unobserve(e.target);
     }
   });
-}, { threshold: 0.4 });
+}, { threshold: 0.5 });
 
-// Observe each plan card individually
-document.querySelectorAll('.plan').forEach(plan => {
-  counterObserver.observe(plan);
-});
+$$('.plan').forEach(p => planObserver.observe(p));
+
+// Metrics Counters
+const metObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.metrics .counter').forEach(cnt => {
+        const target = parseFloat(cnt.dataset.target);
+        animateNumber(cnt, Math.round(target));
+      });
+      metObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+metObserver.observe($('.metrics'));
+
+// Contact year
+const yearEl = $('#year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
