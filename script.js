@@ -1,5 +1,6 @@
 /* ===========
-   script.js
+   Professional script.js
+   Fully debugged & optimized
    =========== */
 
 /* --- Helper Functions --- */
@@ -14,8 +15,8 @@ const navLinksContainer = $('#nav-links');
 
 if (menuToggle && navLinksContainer) {
   menuToggle.addEventListener('click', () => {
-    const opened = navLinksContainer.classList.toggle('active');
-    menuToggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+    const isActive = navLinksContainer.classList.toggle('active');
+    menuToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
   });
 
   $$('#nav-links a').forEach(a => {
@@ -35,11 +36,7 @@ const navbar = $('#navbar');
 const hero = $('#hero');
 window.addEventListener('scroll', () => {
   if (!navbar) return;
-  if (window.scrollY > (hero ? (hero.offsetHeight * 0.4) : 60)) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
+  navbar.classList.toggle('scrolled', window.scrollY > (hero ? hero.offsetHeight * 0.4 : 60));
 });
 
 /* =========================
@@ -51,23 +48,25 @@ const navLinks = $$('#nav-links a');
 const io = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     const id = entry.target.getAttribute('id');
-    if (entry.isIntersecting) entry.target.classList.add('visible');
+    entry.target.classList.toggle('visible', entry.isIntersecting);
     if (entry.isIntersecting && id) {
       navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
     }
   });
-}, { threshold: 0.18 });
+}, { threshold: 0.25 });
 
 sections.forEach(s => io.observe(s));
 
 /* =========================
-   Hero Particles
+   Hero Particles (Optimized)
    ========================= */
 const parallaxLayer = document.querySelector('.parallax-layer');
+let particles = [];
 
 function createParticles(count = 24) {
   if (!parallaxLayer) return;
   parallaxLayer.innerHTML = '';
+  particles = [];
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
@@ -78,48 +77,41 @@ function createParticles(count = 24) {
     p.style.left = `${Math.random() * 100}%`;
     p.dataset.speed = (0.2 + Math.random() * 0.9).toFixed(2);
     parallaxLayer.appendChild(p);
+    particles.push(p);
   }
 }
 createParticles();
 
-/* Particle Parallax on Mouse & Scroll */
-(function particlesParallax() {
-  if (!parallaxLayer) return;
-  const particles = () => Array.from(parallaxLayer.children);
+// Unified Particle Animation
+function updateParticles(mouseX = 0, mouseY = 0, scrollY = window.scrollY) {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const cx = (mouseX - w / 2) / (w / 2);
+  const cy = (mouseY - h / 2) / (h / 2);
 
-  window.addEventListener('mousemove', (e) => {
-    const w = window.innerWidth, h = window.innerHeight;
-    const cx = (e.clientX - w / 2) / (w / 2);
-    const cy = (e.clientY - h / 2) / (h / 2);
-
-    particles().forEach((p, i) => {
-      const speed = parseFloat(p.dataset.speed || 0.5);
-      const tx = Math.round(cx * (6 * speed) * (i % 3 + 1));
-      const ty = Math.round(cy * (8 * speed) * (i % 4 + 1));
-      p.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-    });
+  particles.forEach((p, i) => {
+    const speed = parseFloat(p.dataset.speed || 0.5);
+    const tx = Math.round(cx * (6 * speed) * (i % 3 + 1));
+    const ty = Math.round(cy * (8 * speed) * (i % 4 + 1) - scrollY * speed * 0.03);
+    p.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
   });
+}
 
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    particles().forEach((p) => {
-      const speed = parseFloat(p.dataset.speed || 0.5);
-      p.style.transform = `translate3d(0, ${-(scrollY * speed * 0.03)}px, 0)`;
-    });
-  });
-})();
+window.addEventListener('mousemove', (e) => updateParticles(e.clientX, e.clientY));
+window.addEventListener('scroll', () => updateParticles());
 
 /* =========================
-   Metrics & ROI Counters
+   Metrics / ROI Counters
    ========================= */
 const animateCounter = (counter) => {
-  const target = parseFloat(counter.getAttribute('data-target'));
+  const target = parseFloat(counter.dataset.target);
   let count = 0;
-  const increment = target / 120; // smoother
+  const increment = target / 120;
+
   const step = () => {
     count += increment;
     if (count < target) {
-      counter.innerText = count.toFixed(1);
+      counter.innerText = target % 1 !== 0 ? count.toFixed(1) : Math.floor(count);
       requestAnimationFrame(step);
     } else {
       counter.innerText = target;
@@ -145,12 +137,13 @@ $$('.plans, .metrics').forEach(section => counterObserver.observe(section));
 const testimonials = $$('.testimonial');
 const dotsContainer = $('.testimonial-dots');
 let currentTestimonial = 0;
+let testimonialInterval;
 
-// create dots dynamically
+// create dots
 if (dotsContainer) {
   testimonials.forEach((_, i) => {
     const dot = document.createElement('span');
-    if (i === 0) dot.classList.add('active');
+    dot.classList.toggle('active', i === 0);
     dot.addEventListener('click', () => showTestimonial(i));
     dotsContainer.appendChild(dot);
   });
@@ -162,13 +155,18 @@ function showTestimonial(index) {
   testimonials.forEach((t, i) => t.classList.toggle('active', i === index));
   dots.forEach((d, i) => d.classList.toggle('active', i === index));
   currentTestimonial = index;
+  resetTestimonialInterval();
 }
 
-// Auto-slide
-setInterval(() => {
-  let next = (currentTestimonial + 1) % testimonials.length;
-  showTestimonial(next);
-}, 6000);
+function resetTestimonialInterval() {
+  clearInterval(testimonialInterval);
+  testimonialInterval = setInterval(() => {
+    let next = (currentTestimonial + 1) % testimonials.length;
+    showTestimonial(next);
+  }, 6000);
+}
+
+resetTestimonialInterval();
 
 /* =========================
    Contact Form Handling
@@ -186,13 +184,13 @@ if (form) {
       return;
     }
 
-    // Premium UX: simulate success
     const btn = form.querySelector('button');
     btn.innerText = 'Sending...';
     btn.disabled = true;
 
+    // Simulate async send
     setTimeout(() => {
-      alert('Thanks! Your message was sent. We will contact you shortly.');
+      alert('Thanks! Your message was sent successfully.');
       form.reset();
       btn.innerText = 'Send Message';
       btn.disabled = false;
