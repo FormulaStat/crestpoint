@@ -2,16 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crestpoint Capital — Where Wealth Reaches New Heights</title>
-
-  <!-- Main stylesheet -->
+  <meta name="description" content="Crestpoint Capital provides professional crypto and stock portfolio management for investors seeking growth.">
+  <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+  <link rel="preload" href="image/cpbg.png" as="image">
   <link rel="stylesheet" href="style.css" />
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
 </head>
 <body>
 
   <!-- NAVBAR -->
-  <nav class="navbar" id="navbar">
+  <nav class="navbar" id="navbar" role="navigation">
     <div class="logo" role="link" aria-label="Crestpoint Capital - Home">
       <a href="index.html">
         <img src="image/cplogo.png" alt="Crestpoint Capital Logo">
@@ -19,11 +23,11 @@
       </a>
     </div>
 
-    <!-- mobile toggle -->
+    <!-- Mobile toggle -->
     <button id="menu-toggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
 
     <ul id="nav-links" class="nav-links" aria-label="Main navigation">
-      <li><a href="#hero">Home</a></li>
+      <li><a href="#hero" aria-current="page">Home</a></li>
       <li><a href="#about">About Us</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#plans">Plans</a></li>
@@ -33,24 +37,25 @@
     </ul>
   </nav>
 
-  <!-- HERO -->
-<header id="hero" class="hero">
-  <!-- parallax particles -->
-  <div class="parallax-layer" aria-hidden="true"></div>
+  <!-- HERO SECTION -->
+  <header id="hero" class="hero" role="banner">
+    <!-- Parallax particles -->
+    <div class="parallax-layer" aria-hidden="true"></div>
 
-  <div class="hero-content">
-    <h1>Crestpoint Capital</h1>
-    <p>Where Wealth Reaches New Heights</p>
-    <a href="#plans" class="btn">Apply to Invest</a>
-  </div>
-</header>
+    <div class="hero-content">
+      <h1>Crestpoint Capital</h1>
+      <p>Where Wealth Reaches New Heights</p>
+      <a href="#plans" class="btn" role="button">Apply to Invest</a>
+      <div class="scroll-indicator" aria-hidden="true">⌄</div>
+    </div>
+  </header>
 
   <!-- MAIN CONTENT -->
   <main>
 
     <!-- ABOUT -->
-    <section id="about" class="reveal">
-      <h2>About Us</h2>
+    <section id="about" class="reveal" aria-labelledby="about-heading">
+      <h2 id="about-heading">About Us</h2>
       <p>
         Crestpoint Capital LLC is a Delaware-based private investment management company 
         specializing in cryptocurrency and stock portfolio management. We combine 
@@ -60,8 +65,8 @@
     </section>
 
     <!-- SERVICES -->
-    <section id="services" class="reveal">
-      <h2>Our Services</h2>
+    <section id="services" class="reveal" aria-labelledby="services-heading">
+      <h2 id="services-heading">Our Services</h2>
       <ul>
         <li><strong>Crypto Investment Management:</strong> Secure custody and active management of leading cryptocurrencies.</li>
         <li><strong>Stock Investment Management:</strong> Diversified portfolios of equities and ETFs.</li>
@@ -70,18 +75,18 @@
     </section>
 
     <!-- METRICS -->
-    <section id="metrics" class="metrics section">
-      <h2 class="section-title">Our Track Record</h2>
+    <section id="metrics" class="metrics section" aria-labelledby="metrics-heading">
+      <h2 id="metrics-heading" class="section-title">Our Track Record</h2>
       <div class="metrics-grid">
-        <div class="metric">
+        <div class="metric" role="group" aria-label="Assets Managed">
           <span class="counter" data-target="12000000">0</span>
           <span class="label">Assets Managed ($)</span>
         </div>
-        <div class="metric">
+        <div class="metric" role="group" aria-label="Happy Clients">
           <span class="counter" data-target="8500">0</span>
           <span class="label">Happy Clients</span>
         </div>
-        <div class="metric">
+        <div class="metric" role="group" aria-label="Average ROI">
           <span class="counter" data-target="14.5">0</span>
           <span class="label">Average ROI (%)</span>
         </div>
@@ -89,11 +94,10 @@
     </section>
 
     <!-- PLANS -->
-    <section id="plans" class="plans">
-      <h2 class="section-title">Investment Plans</h2>
+    <section id="plans" class="plans" aria-labelledby="plans-heading">
+      <h2 id="plans-heading" class="section-title">Investment Plans</h2>
       <div class="plan-container">
-
-        <div class="plan">
+        <article class="plan">
           <h3>Starter Plan</h3>
           <p>Perfect for new investors seeking quick, low-risk weekly growth.</p>
           <ul>
@@ -102,10 +106,10 @@
             <li><strong>Projected ROI:</strong> <span class="counter" data-target="1.8">0</span>% per week</li>
             <li><strong>Support:</strong> Basic email support</li>
           </ul>
-          <a href="#contact" class="btn">Start Now</a>
-        </div>
+          <a href="#contact" class="btn" role="button">Start Now</a>
+        </article>
 
-        <div class="plan">
+        <article class="plan">
           <h3>Growth Plan</h3>
           <p>Designed for active investors aiming at stable bi-weekly growth.</p>
           <ul>
@@ -114,10 +118,10 @@
             <li><strong>Projected ROI:</strong> <span class="counter" data-target="4">0</span>% per cycle</li>
             <li><strong>Support:</strong> Dedicated account manager</li>
           </ul>
-          <a href="#contact" class="btn">Upgrade Now</a>
-        </div>
+          <a href="#contact" class="btn" role="button">Upgrade Now</a>
+        </article>
 
-        <div class="plan">
+        <article class="plan">
           <h3>Premium Plan</h3>
           <p>For professionals seeking reliable monthly growth with portfolio diversification.</p>
           <ul>
@@ -126,10 +130,10 @@
             <li><strong>Projected ROI:</strong> <span class="counter" data-target="10">0</span>% per month</li>
             <li><strong>Support:</strong> Priority access + strategy sessions</li>
           </ul>
-          <a href="#contact" class="btn">Join Premium</a>
-        </div>
+          <a href="#contact" class="btn" role="button">Join Premium</a>
+        </article>
 
-        <div class="plan elite">
+        <article class="plan elite">
           <h3>Elite Plan</h3>
           <p>Exclusive for elite clients targeting maximum long-term portfolio performance.</p>
           <ul>
@@ -138,15 +142,14 @@
             <li><strong>Projected ROI:</strong> <span class="counter" data-target="25">0</span>% per cycle</li>
             <li><strong>Support:</strong> 24/7 concierge & personal strategist</li>
           </ul>
-          <a href="#contact" class="btn">Join Elite</a>
-        </div>
-
+          <a href="#contact" class="btn" role="button">Join Elite</a>
+        </article>
       </div>
     </section>
 
     <!-- HOW IT WORKS -->
-    <section id="how" class="reveal">
-      <h2>How It Works</h2>
+    <section id="how" class="reveal" aria-labelledby="how-heading">
+      <h2 id="how-heading">How It Works</h2>
       <ol>
         <li><strong>Apply:</strong> Join our private investor network.</li>
         <li><strong>Managed Growth:</strong> Experts handle the strategy.</li>
@@ -155,27 +158,27 @@
     </section>
 
     <!-- TESTIMONIALS -->
-    <section id="testimonials" class="testimonials section">
-      <h2 class="section-title">What Our Clients Say</h2>
+    <section id="testimonials" class="testimonials section" aria-labelledby="testimonials-heading">
+      <h2 id="testimonials-heading" class="section-title">What Our Clients Say</h2>
       <div class="testimonial-slider">
         <div class="testimonial active">
           <p>"Crestpoint Capital transformed my savings into real growth. The ROI was beyond expectations."</p>
           <div class="author">
-            <img src="image/client1.webp" alt="Client 1">
+            <img src="image/client1.webp" alt="Sarah Johnson" loading="lazy">
             <span>Sarah Johnson — Entrepreneur</span>
           </div>
         </div>
         <div class="testimonial">
           <p>"Professional, transparent, and reliable. I’ve trusted them for 2 years now."</p>
           <div class="author">
-            <img src="image/client2.webp" alt="Client 2">
+            <img src="image/client2.webp" alt="David Chen" loading="lazy">
             <span>David Chen — Engineer</span>
           </div>
         </div>
         <div class="testimonial">
           <p>"The investment plans are structured and clear. My portfolio is steadily growing."</p>
           <div class="author">
-            <img src="image/client3.webp" alt="Client 3">
+            <img src="image/client3.webp" alt="Olivia Smith" loading="lazy">
             <span>Olivia Smith — Designer</span>
           </div>
         </div>
@@ -184,8 +187,8 @@
     </section>
 
     <!-- WHY CHOOSE US -->
-    <section id="why" class="reveal">
-      <h2>Why Choose Crestpoint Capital</h2>
+    <section id="why" class="reveal" aria-labelledby="why-heading">
+      <h2 id="why-heading">Why Choose Crestpoint Capital</h2>
       <ul>
         <li>Registered Delaware LLC</li>
         <li>Balanced crypto + stock strategies</li>
@@ -195,22 +198,26 @@
     </section>
 
     <!-- CTA -->
-    <section id="cta" class="reveal">
-      <h2>Join Crestpoint Capital Today</h2>
-      <a href="#contact" class="btn">Apply to Invest</a>
+    <section id="cta" class="reveal" aria-labelledby="cta-heading">
+      <h2 id="cta-heading">Join Crestpoint Capital Today</h2>
+      <a href="#contact" class="btn" role="button">Apply to Invest</a>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="reveal">
-      <h2>Contact Us</h2>
-      <p>Email: info@crestpointcapital.com</p>
+    <section id="contact" class="reveal" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact Us</h2>
+      <p>Email: <a href="mailto:info@crestpointcapital.com">info@crestpointcapital.com</a></p>
       <p>Location: Wilmington, Delaware, USA</p>
 
       <form id="contact-form" novalidate>
-        <input name="name" type="text" placeholder="Your Name" required>
-        <input name="email" type="email" placeholder="Your Email" required>
-        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-        <button type="submit" class="btn">Send Message</button>
+        <label for="name">Your Name</label>
+        <input id="name" name="name" type="text" placeholder="Your Name" required>
+        <label for="email">Your Email</label>
+        <input id="email" name="email" type="email" placeholder="Your Email" required>
+        <label for="message">Your Message</label>
+        <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+        <button type="submit" class="btn" role="button">Send Message</button>
+        <div id="form-msg" aria-live="polite"></div>
       </form>
     </section>
 
@@ -220,9 +227,5 @@
   <footer>
     <p>&copy; <span id="year"></span> Crestpoint Capital LLC. All rights reserved.</p>
     <p><small>Investments involve risk. Crestpoint Capital does not guarantee returns. Private offering only.</small></p>
-  </footer>
-
-  <!-- Main script -->
-  <script src="script.js" defer></script>
-</body>
-</html>
+    <div class="footer-links">
+      <a href="#">Privacy
