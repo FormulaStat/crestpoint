@@ -369,48 +369,7 @@ main section ul li strong { color: #ffd700; }
   box-shadow: 0 8px 22px rgba(255,215,0,0.45);
 }
 
-/* ===========================
-   Floating Circular Hamburger
-   =========================== */
-.menu-toggle {
-  display: none;
-  background: #111;
-  border: 2px solid #ffd700;
-  border-radius: 50%;
-  cursor: pointer;
-  padding: 12px;
-  width: 52px;
-  height: 52px;
-  position: fixed;
-  top: 18px;
-  right: 20px;
-  z-index: 1400;
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.35);
-  transition: all 0.35s ease;
-}
-.menu-toggle:hover {
-  transform: scale(1.08);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.55);
-  background: #222;
-}
-.menu-toggle .bar {
-  display: block;
-  width: 24px;
-  height: 3px;
-  margin: 5px auto;
-  background: #ffd700;
-  border-radius: 3px;
-  transition: 0.4s;
-}
-.menu-toggle.active .bar:nth-child(1) {
-  transform: rotate(-45deg) translate(-6px, 6px);
-}
-.menu-toggle.active .bar:nth-child(2) {
-  opacity: 0;
-}
-.menu-toggle.active .bar:nth-child(3) {
-  transform: rotate(45deg) translate(-6px, -6px);
-}
+
 
 /* ===========================
    Responsive
