@@ -16,7 +16,6 @@ if (menuToggle && navLinksContainer) {
     menuToggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
   });
 
-  // close when clicking any internal link (good UX)
   $$('#nav-links a').forEach(a => {
     a.addEventListener('click', () => {
       if (navLinksContainer.classList.contains('active')) {
@@ -29,9 +28,9 @@ if (menuToggle && navLinksContainer) {
 
 // --- particles generator ---
 const parallaxLayer = document.querySelector('.parallax-layer');
-function createParticles(count = 22) {
+function createParticles(count = 24) {
   if (!parallaxLayer) return;
-  parallaxLayer.innerHTML = ''; // reset
+  parallaxLayer.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
@@ -44,15 +43,15 @@ function createParticles(count = 22) {
     parallaxLayer.appendChild(p);
   }
 }
-createParticles(24);
+createParticles();
 
-// particles subtle parallax on mousemove & scroll
+// particles parallax
 (function particlesParallax() {
   const particles = () => parallaxLayer ? Array.from(parallaxLayer.children) : [];
-  window.addEventListener('mousemove', (e) => {
+  window.addEventListener('mousemove', e => {
     const w = window.innerWidth, h = window.innerHeight;
-    const cx = (e.clientX - w/2) / (w/2);
-    const cy = (e.clientY - h/2) / (h/2);
+    const cx = (e.clientX - w / 2) / (w / 2);
+    const cy = (e.clientY - h / 2) / (h / 2);
     particles().forEach((p, i) => {
       const speed = parseFloat(p.dataset.speed || 0.5);
       const tx = Math.round(cx * (6 * speed) * (i % 3 + 1));
@@ -60,7 +59,6 @@ createParticles(24);
       p.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
     });
   });
-
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     particles().forEach((p, i) => {
@@ -70,7 +68,7 @@ createParticles(24);
   });
 })();
 
-// --- navbar scrolled effect ---
+// --- navbar scroll effect ---
 const navbar = $('#navbar');
 const hero = $('#hero');
 window.addEventListener('scroll', () => {
@@ -82,31 +80,25 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// --- ScrollSpy & reveal-on-scroll ---
+// --- ScrollSpy & reveal ---
 const sections = $$('main section, header#hero');
 const navLinks = $$('#nav-links a');
-
 const ioOptions = { threshold: 0.18 };
-const io = new IntersectionObserver((entries) => {
+const io = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     const id = entry.target.getAttribute('id');
-    // reveal
     if (entry.isIntersecting) entry.target.classList.add('visible');
-    // scrollspy
     if (entry.isIntersecting && id) {
-      navLinks.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-      });
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
     }
   });
 }, ioOptions);
-
 sections.forEach(s => io.observe(s));
 
-// --- contact form ---
+// --- Contact Form ---
 const form = $('#contact-form');
 if (form) {
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', e => {
     e.preventDefault();
     const name = form.name?.value?.trim();
     const email = form.email?.value?.trim();
@@ -120,47 +112,39 @@ if (form) {
   });
 }
 
-// --- dynamic year ---
+// --- Dynamic Year ---
 const yearEl = $('#year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-// --- ROI / Metrics Counters ---
-const speed = 150;
-
-const animateCounter = (counter) => {
+// --- Counters ---
+const animateCounter = counter => {
   const target = +counter.getAttribute('data-target');
-  let count = +counter.innerText || 0;
-  const increment = target / speed;
-
+  let count = parseFloat(counter.innerText) || 0;
+  const increment = target / 150;
   if (count < target) {
-    counter.innerText = (count + increment).toFixed(1);
-    setTimeout(() => animateCounter(counter), 30);
+    counter.innerText = (count + increment).toFixed(target % 1 ? 1 : 0);
+    setTimeout(() => animateCounter(counter), 25);
   } else {
     counter.innerText = target;
   }
 };
 
-// Animate counters when their section is visible
 const counterObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.querySelectorAll('.counter').forEach(counter => animateCounter(counter));
+      entry.target.querySelectorAll('.counter').forEach(c => animateCounter(c));
       counterObserver.unobserve(entry.target);
     }
   });
 }, { threshold: 0.4 });
 
-// Observe plans and metrics
-const sectionsWithCounters = $$('.plans, .metrics');
-sectionsWithCounters.forEach(section => counterObserver.observe(section));
+$$('.plans, .metrics').forEach(section => counterObserver.observe(section));
 
 // --- Testimonials Slider ---
 const testimonials = $$('.testimonial');
 const dotsContainer = $('.testimonial-dots');
-
 let currentTestimonial = 0;
 
-// Create dots dynamically
 if (dotsContainer) {
   testimonials.forEach((_, i) => {
     const dot = document.createElement('span');
@@ -178,8 +162,15 @@ function showTestimonial(index) {
   currentTestimonial = index;
 }
 
-// Auto-slide every 6 seconds
-setInterval(() => {
+// Auto-slide with pause on hover
+let sliderInterval = setInterval(nextTestimonial, 6000);
+function nextTestimonial() {
   let next = (currentTestimonial + 1) % testimonials.length;
   showTestimonial(next);
-}, 6000);
+}
+
+const testimonialSlider = $('.testimonial-slider');
+if (testimonialSlider) {
+  testimonialSlider.addEventListener('mouseenter', () => clearInterval(sliderInterval));
+  testimonialSlider.addEventListener('mouseleave', () => sliderInterval = setInterval(nextTestimonial, 6000));
+}
