@@ -7,12 +7,13 @@ body {
   font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   background: #0b0b0b;
   color: #eaeaea;
-  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 
+/* Links */
 a { color: inherit; text-decoration: none; }
 
 /* ===========================
@@ -37,19 +38,23 @@ a { color: inherit; text-decoration: none; }
   padding: 10px 6%;
 }
 
+/* Logo */
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo img { height: 44px; width: auto; display: block; }
-.company-name { color: #f0c040; font-weight: 700; font-size: 1.15rem; }
+.company-name { color: #f0c040; font-weight: 700; font-size: 1.15rem; display: inline-block; }
 
+/* Nav Links */
 .nav-links {
   display: flex;
   align-items: center;
   gap: 28px;
   list-style: none;
+  transition: right 0.4s ease;
 }
 .nav-links li a { font-weight: 500; transition: color 0.2s ease; color: #f2f2f2; }
 .nav-links li a:hover, .nav-links li a.active { color: #f0c040; }
 
+/* Mobile Menu */
 .menu-toggle {
   display: none;
   background: transparent;
@@ -74,7 +79,6 @@ a { color: inherit; text-decoration: none; }
     background: #111;
     border-left: 2px solid #222;
     box-shadow: -5px 0 15px rgba(0,0,0,0.4);
-    transition: right 0.4s ease-in-out;
   }
   .nav-links.active { right: 0; }
   .nav-links li { margin: 15px 0; }
@@ -134,7 +138,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ===========================
-   Main Sections
+   About & Services
    =========================== */
 main section { padding: 90px 6%; text-align: center; }
 main section ul { list-style: none; text-align: left; margin: 20px auto; max-width: 600px; }
@@ -221,8 +225,25 @@ main section ul li strong { color: #ffd700; }
 .metric:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
 .metric .counter { font-size: 2rem; font-weight: bold; color: #00d084; display: block; margin-bottom: 0.5rem; }
 .metric .label { font-size: 0.95rem; color: #ccc; }
+.metric .sparkline { width: 100%; height: 60px; margin-top: 1rem; }
 
 /* ===========================
    Testimonials Section
    =========================== */
-.testimonials { background: #0d1117; color: #f0f0f
+.testimonials { background: #0d1117; color: #f0f0f0; text-align: center; padding: 4rem 2rem; }
+.testimonial-slider { max-width: 800px; margin: 2rem auto; overflow: hidden; }
+.testimonial { display: none; opacity: 0; transition: opacity 0.8s ease; }
+.testimonial.active { display: block; opacity: 1; }
+.testimonial p { font-size: 1.2rem; font-style: italic; margin-bottom: 1.5rem; }
+.testimonial .author { display: flex; align-items: center; justify-content: center; gap: 0.8rem; }
+.testimonial .author img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #00d084; }
+.testimonial-dots { margin-top: 1rem; }
+.testimonial-dots span {
+  display: inline-block; width: 12px; height: 12px; margin: 0 5px; background: #555; border-radius: 50%; cursor: pointer; transition: background 0.3s;
+}
+.testimonial-dots span.active { background: #00d084; }
+
+/* ===========================
+   Buttons & CTA
+   =========================== */
+.btn { cursor: pointer; text-decoration: none; }
