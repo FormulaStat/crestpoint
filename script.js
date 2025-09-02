@@ -2,11 +2,13 @@
    script.js
    =========== */
 
-// --- helpers ---
+/* --- Helper Functions --- */
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-// --- Mobile nav toggle ---
+/* =========================
+   Mobile Nav Toggle
+   ========================= */
 const menuToggle = $('#menu-toggle');
 const navLinksContainer = $('#nav-links');
 
@@ -26,19 +28,46 @@ if (menuToggle && navLinksContainer) {
   });
 }
 
-// --- Hero Video Fallback ---
-const heroVideo = $('#hero-video');
-if (heroVideo) {
-  heroVideo.addEventListener('error', () => {
-    heroVideo.style.display = 'none';
-  });
-}
+/* =========================
+   Navbar Scroll Effect
+   ========================= */
+const navbar = $('#navbar');
+const hero = $('#hero');
+window.addEventListener('scroll', () => {
+  if (!navbar) return;
+  if (window.scrollY > (hero ? (hero.offsetHeight * 0.4) : 60)) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
 
-// --- Parallax particles ---
+/* =========================
+   Smooth Scroll Spy & Reveal
+   ========================= */
+const sections = $$('main section, header#hero');
+const navLinks = $$('#nav-links a');
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const id = entry.target.getAttribute('id');
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+    if (entry.isIntersecting && id) {
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
+    }
+  });
+}, { threshold: 0.18 });
+
+sections.forEach(s => io.observe(s));
+
+/* =========================
+   Hero Particles
+   ========================= */
 const parallaxLayer = document.querySelector('.parallax-layer');
+
 function createParticles(count = 24) {
   if (!parallaxLayer) return;
-  parallaxLayer.innerHTML = ''; // reset
+  parallaxLayer.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
@@ -53,15 +82,16 @@ function createParticles(count = 24) {
 }
 createParticles();
 
-// particles subtle parallax on mousemove & scroll
+/* Particle Parallax on Mouse & Scroll */
 (function particlesParallax() {
   if (!parallaxLayer) return;
   const particles = () => Array.from(parallaxLayer.children);
-  
+
   window.addEventListener('mousemove', (e) => {
     const w = window.innerWidth, h = window.innerHeight;
-    const cx = (e.clientX - w/2) / (w/2);
-    const cy = (e.clientY - h/2) / (h/2);
+    const cx = (e.clientX - w / 2) / (w / 2);
+    const cy = (e.clientY - h / 2) / (h / 2);
+
     particles().forEach((p, i) => {
       const speed = parseFloat(p.dataset.speed || 0.5);
       const tx = Math.round(cx * (6 * speed) * (i % 3 + 1));
@@ -79,61 +109,13 @@ createParticles();
   });
 })();
 
-// --- Navbar scroll effect ---
-const navbar = $('#navbar');
-const hero = $('#hero');
-window.addEventListener('scroll', () => {
-  if (!navbar) return;
-  if (window.scrollY > (hero ? (hero.offsetHeight * 0.4) : 60)) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
-});
-
-// --- ScrollSpy & reveal-on-scroll ---
-const sections = $$('main section, header#hero');
-const navLinks = $$('#nav-links a');
-
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const id = entry.target.getAttribute('id');
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-    if (entry.isIntersecting && id) {
-      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
-    }
-  });
-}, { threshold: 0.18 });
-
-sections.forEach(s => io.observe(s));
-
-// --- Contact Form ---
-const form = $('#contact-form');
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = form.name?.value?.trim();
-    const email = form.email?.value?.trim();
-    const msg = form.message?.value?.trim();
-    if (!name || !email || !msg) {
-      alert('Please fill all fields before sending.');
-      return;
-    }
-    alert('Thanks — your message was sent. We will contact you shortly.');
-    form.reset();
-  });
-}
-
-// --- Dynamic Year ---
-const yearEl = $('#year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-// --- ROI / Metrics Counters ---
+/* =========================
+   Metrics & ROI Counters
+   ========================= */
 const animateCounter = (counter) => {
   const target = parseFloat(counter.getAttribute('data-target'));
   let count = 0;
-  const increment = target / 100;
-
+  const increment = target / 120; // smoother
   const step = () => {
     count += increment;
     if (count < target) {
@@ -157,13 +139,14 @@ const counterObserver = new IntersectionObserver(entries => {
 
 $$('.plans, .metrics').forEach(section => counterObserver.observe(section));
 
-// --- Testimonials Slider ---
+/* =========================
+   Testimonials Slider
+   ========================= */
 const testimonials = $$('.testimonial');
 const dotsContainer = $('.testimonial-dots');
-
 let currentTestimonial = 0;
 
-// create dots
+// create dots dynamically
 if (dotsContainer) {
   testimonials.forEach((_, i) => {
     const dot = document.createElement('span');
@@ -181,8 +164,44 @@ function showTestimonial(index) {
   currentTestimonial = index;
 }
 
-// auto-slide
+// Auto-slide
 setInterval(() => {
   let next = (currentTestimonial + 1) % testimonials.length;
   showTestimonial(next);
 }, 6000);
+
+/* =========================
+   Contact Form Handling
+   ========================= */
+const form = $('#contact-form');
+if (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = form.name?.value?.trim();
+    const email = form.email?.value?.trim();
+    const msg = form.message?.value?.trim();
+
+    if (!name || !email || !msg) {
+      alert('Please fill all fields before sending.');
+      return;
+    }
+
+    // Premium UX: simulate success
+    const btn = form.querySelector('button');
+    btn.innerText = 'Sending...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      alert('Thanks! Your message was sent. We will contact you shortly.');
+      form.reset();
+      btn.innerText = 'Send Message';
+      btn.disabled = false;
+    }, 1200);
+  });
+}
+
+/* =========================
+   Dynamic Year
+   ========================= */
+const yearEl = $('#year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
