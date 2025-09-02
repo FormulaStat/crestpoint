@@ -90,36 +90,17 @@ a { color: inherit; text-decoration: none; }
    =========================== */
 .hero {
   position: relative;
-  min-height: 100vh;
+  height: 50vh; /* Half of the viewport height */
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   overflow: hidden;
 
-  /* New background image */
+  /* Background image */
   background: url('image/cpbg.png') center center/cover no-repeat;
 }
 
-
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  overflow: hidden;
-}
-
-#hero-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-}
 
 .parallax-layer { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow:hidden; }
 
@@ -135,8 +116,8 @@ a { color: inherit; text-decoration: none; }
 
 /* Small screens */
 @media (max-width: 680px) {
-  .hero h1 { font-size: 2rem; }
-  .hero p { font-size: 1rem; }
+  .hero h1 { font-size: 1.8rem; }
+  .hero p { font-size: 0.95rem; }
 }
 
 /* ===========================
