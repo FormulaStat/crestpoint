@@ -49,25 +49,48 @@ a:hover { color: #ffd700; }
 .nav-links li a { font-weight: 500; }
 .nav-links li a.active, .nav-links li a:hover { color: #f0c040; }
 
-/* Mobile Menu */
-.menu-toggle { display: none; font-size: 28px; background: transparent; border: none; cursor: pointer; color: #fff; }
+/* Mobile Hamburger Bars */
+.menu-toggle { display: none; background: transparent; border: none; cursor: pointer; padding: 8px; position: relative; z-index: 1300; }
+.menu-toggle .bar { display: block; width: 26px; height: 3px; margin: 5px 0; background: #ffd700; border-radius: 3px; transition: 0.4s; }
+
+/* Hamburger animation on open */
+.nav-links.active ~ .menu-toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+.nav-links.active ~ .menu-toggle .bar:nth-child(2) { opacity: 0; }
+.nav-links.active ~ .menu-toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+/* CTA Buttons */
+.cta-buttons { display: flex; gap: 12px; align-items: center; }
+.btn-signup {
+  padding: 14px 36px;
+  background: linear-gradient(45deg, #ffd700, #ffcc00);
+  color: #0b0b0b;
+  font-weight: 600;
+  border-radius: 50px;
+  box-shadow: 0 8px 20px rgba(255,215,0,0.45);
+  transition: all 0.35s ease;
+}
+.btn-signup:hover { transform: scale(1.1); box-shadow: 0 12px 28px rgba(255,215,0,0.65); background: linear-gradient(45deg, #ffcc00, #ffd700); }
+
+.btn-login {
+  padding: 12px 32px;
+  border: 2px solid #ffd700;
+  border-radius: 50px;
+  font-weight: 500;
+  background: transparent;
+  color: #ffd700;
+  transition: all 0.35s ease;
+}
+.btn-login:hover { background: #ffd700; color: #0b0b0b; transform: scale(1.05); }
+
+/* Desktop spacing */
+.nav-links li.cta-buttons { margin-left: 20px; }
+
+/* Responsive mobile menu */
 @media (max-width: 768px) {
   .menu-toggle { display: block; }
-  .nav-links {
-    position: fixed;
-    right: -260px;
-    top: 60px;
-    width: 240px;
-    height: calc(100vh - 60px);
-    flex-direction: column;
-    background: #111;
-    padding: 20px;
-    border-left: 2px solid #222;
-    transition: right 0.4s ease;
-  }
+  .nav-links { flex-direction: column; padding: 30px 20px; right: -260px; width: 240px; top: 60px; background: linear-gradient(180deg, #111, #0b0b0b); }
   .nav-links.active { right: 0; }
-  .nav-links li { margin: 18px 0; }
-  .nav-links li a { font-size: 1rem; padding: 10px; display: block; }
+  .cta-buttons { flex-direction: column; gap: 15px; margin-top: 20px; }
 }
 
 /* ===========================
