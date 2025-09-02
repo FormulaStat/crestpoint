@@ -15,26 +15,32 @@
 <body>
 
   <!-- NAVBAR -->
-  <nav class="navbar" id="navbar" role="navigation">
-    <div class="logo" role="link" aria-label="Crestpoint Capital - Home">
-      <a href="index.html">
-        <img src="image/cplogo.png" alt="Crestpoint Capital Logo">
-        <span class="company-name">Crestpoint Capital</span>
-      </a>
-    </div>
+  <nav class="navbar" id="navbar">
+  <div class="logo" role="link" aria-label="Crestpoint Capital - Home">
+    <a href="index.html">
+      <img src="image/cplogo.png" alt="Crestpoint Capital Logo">
+      <span class="company-name">Crestpoint Capital</span>
+    </a>
+  </div>
 
-    <!-- Mobile toggle -->
-    <button id="menu-toggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  <!-- mobile toggle -->
+  <button id="menu-toggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
 
-    <ul id="nav-links" class="nav-links" aria-label="Main navigation">
-      <li><a href="#hero" aria-current="page">Home</a></li>
-      <li><a href="#about">About Us</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#plans">Plans</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="signup.html" class="btn">Sign Up</a></li>
-      <li><a href="login.html" class="btn-outline">Login</a></li>
-    </ul>
+  <ul id="nav-links" class="nav-links" aria-label="Main navigation">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#about">About Us</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#plans">Plans</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li class="cta-buttons">
+      <a href="signup.html" class="btn btn-signup">Sign Up</a>
+      <a href="login.html" class="btn btn-login">Login</a>
+    </li>
+  </ul>
   </nav>
 
   <!-- HERO SECTION -->
